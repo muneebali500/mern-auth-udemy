@@ -1,0 +1,24 @@
+:root {
+  --clr-primary-light: rgb(52, 187, 52);
+  --clr-primary: rgb(4, 146, 4);
+  --clr-secondary: rgba(0, 0, 0, 0.6);
+  --box-shadow: 0.5rem 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  --clr-price2: rgb(31, 197, 31);
+  --clr-price1: rgb(216, 213, 13);
+  --clr-price3: rgb(134, 134, 240);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
