@@ -83,10 +83,11 @@ export const accountActivation = (req, res) => {
     jwt.verify(
       token,
       process.env.JWT_ACCOUNT_ACTIVATION,
-      (err, decodedToken) => {
+      function (err, decoded) {
         if (err) {
+          console.log("JWT VERIFY IN ACCOUNT ACTIVATION ERROR", err);
           return res.status(401).json({
-            error: `Expired link. Signup again`,
+            error: "Expired link. Signup again",
           });
         }
 
@@ -96,21 +97,20 @@ export const accountActivation = (req, res) => {
 
         user.save((err, user) => {
           if (err) {
-            // console.log(`Save user in account activation error`, err);
+            console.log("SAVE USER IN ACCOUNT ACTIVATION ERROR", err);
             return res.status(401).json({
-              error: err,
+              error: "Error saving user in database. Try signup again",
             });
           }
-
           return res.json({
-            message: `Signup success. please sign in`,
+            message: "Signup success. Please signin.",
           });
         });
       }
     );
   } else {
     return res.json({
-      message: `Something went wrong. Please try again`,
+      message: "Something went wrong. Try again.",
     });
   }
 };

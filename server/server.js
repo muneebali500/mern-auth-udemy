@@ -23,10 +23,10 @@ mongoose
 // app middlewares
 app.use(morgan("dev"));
 app.use(express.json());
-// app.use(cors()); // allows all origins
-if ((process.env.NODE_ENV = "development")) {
-  app.use(cors({ origin: `http://localhost:3000` }));
-}
+app.use(cors()); // allows all origins
+// if ((process.env.NODE_ENV = "development")) {
+//   app.use(cors({ origin: `http://localhost:3000` }));
+// }
 
 // middleware
 app.use("/api", authRoutes);
