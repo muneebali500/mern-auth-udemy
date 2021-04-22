@@ -1,7 +1,8 @@
 import User from "../models/user.js";
 import jwt from "jsonwebtoken";
-import sgMail from "@sendgrid/mail";
+import expressJwt from "express-jwt";
 
+import sgMail from "@sendgrid/mail";
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 /* export const signup = (req, res) => {
@@ -145,3 +146,8 @@ export const signin = (req, res) => {
     });
   });
 };
+
+export const requireSignin = expressJwt({
+  secret: process.env.JWT_SECRET,
+  algorithms: ["HS256"],
+});
