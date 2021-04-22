@@ -8,6 +8,7 @@ const app = express();
 
 // Import routes
 import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/user.js";
 
 // Connect to DATABASE
 mongoose
@@ -30,6 +31,7 @@ app.use(cors()); // allows all origins
 
 // middleware
 app.use("/api", authRoutes);
+app.use("/api", userRoutes);
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
