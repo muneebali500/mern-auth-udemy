@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import Layout from "../core/Layout";
 import axios from "axios";
-import { isAuth } from "../auth/helpers";
+import { isAuth, getCookie, signout } from "../auth/helpers";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
-export default function Private() {
+export default function Private({ history }) {
   const [values, setValues] = useState({
     role: "",
     name: "",
@@ -14,6 +14,35 @@ export default function Private() {
     password: "",
     buttonText: "Submit",
   });
+
+  const token = getCookie(`token`);
+
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
+  const loadProfile = () => {
+    axios({
+      method: `GET`,
+      url: `${process.env.REACT_APP_API}/user/${isAuth()._id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        // console.log(`Private Profile Update`, response);
+        const { role, name, email } = response.data;
+        setValues({ ...values, role, name, email });
+      })
+      .catch((error) => {
+        // console.log(`Private profile update error`, error.response.data.error);
+        if (error.response.status === 401) {
+          signout(() => {
+            history.push(`/`);
+          });
+        }
+      });
+  };
 
   const { role, name, email, password, buttonText } = values;
 
@@ -52,7 +81,12 @@ export default function Private() {
     <form>
       <div className="form-group">
         <label className="text-muted">Role</label>
-        <input defaultValue={role} type="text" className="form-control" />
+        <input
+          defaultValue={role}
+          type="text"
+          className="form-control"
+          disabled
+        />
       </div>
 
       <div className="form-group">
@@ -67,7 +101,12 @@ export default function Private() {
 
       <div className="form-group">
         <label className="text-muted">Email</label>
-        <input defaultValue={email} type="email" className="form-control" />
+        <input
+          defaultValue={email}
+          type="email"
+          className="form-control"
+          disabled
+        />
       </div>
 
       <div className="form-group">
