@@ -90,6 +90,13 @@ export default function Signin({ history }) {
         {isAuth() ? <Redirect to="/" /> : null}
         <h1 className="p-5">Signin</h1>
         {signinForm()}
+        <br />
+        <Link
+          to="/auth/password/forgot"
+          className="btn btn-sm btn-outline-danger"
+        >
+          Forgot Password
+        </Link>
       </div>
     </Layout>
   );

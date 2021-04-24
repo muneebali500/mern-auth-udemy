@@ -8,6 +8,7 @@ import Admin from "./core/Admin";
 import PrivateRoute from "./auth/PrivateRoute";
 import AdminRoute from "./auth/AdminRoute";
 import ForgotPassword from "./auth/ForgotPassword";
+import ResetPassword from "./auth/ResetPassword";
 
 export default function Routes() {
   return (
@@ -23,6 +24,11 @@ export default function Routes() {
           path="/auth/password/forgot"
           exact
           component={ForgotPassword}
+        ></Route>
+        <Route
+          path="/auth/password/reset/:token"
+          exact
+          component={ResetPassword}
         ></Route>
       </Switch>
     </BrowserRouter>
