@@ -5,6 +5,7 @@ import axios from "axios";
 import { authenticate, isAuth } from "./helpers";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import Google from "./Google";
 
 export default function Signin({ history }) {
   const [values, setValues] = useState({
@@ -89,6 +90,7 @@ export default function Signin({ history }) {
         <ToastContainer />
         {isAuth() ? <Redirect to="/" /> : null}
         <h1 className="p-5">Signin</h1>
+        <Google />
         {signinForm()}
         <br />
         <Link
