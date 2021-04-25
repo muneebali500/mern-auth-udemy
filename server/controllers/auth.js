@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import expressJwt from "express-jwt";
 import _ from "lodash";
 import { OAuth2Client } from "google-auth-library";
+import fetch from "node-fetch";
 
 import sgMail from "@sendgrid/mail";
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -326,5 +327,63 @@ export const googleLogin = (req, res) => {
           error: `Google login failed`,
         });
       }
+    });
+};
+
+export const facebookLogin = (req, res) => {
+  // console.log(req.body);
+  const { userID, accessToken } = req.body;
+
+  const url = `https://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`;
+
+  return fetch(url, {
+    method: `GET`,
+  })
+    .then((response) => response.json())
+    .then((response) => {
+      const { email, name } = response;
+      User.findOne({ email }).exec((err, user) => {
+        if (user) {
+          const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: `7d`,
+          });
+          const { _id, email, name, role } = user;
+          return res.json({
+            token,
+            user: { _id, email, name, role },
+          });
+        } else {
+          {
+            let password = email + process.env.JWT_SECRET;
+            user = new User({ name, email, password });
+            user.save((err, data) => {
+              if (err) {
+                // console.log(`Error facebook login on user save`, err);
+                return res.status(400).json({
+                  error: `User signup failed witth facebook`,
+                });
+              }
+
+              const token = jwt.sign(
+                { _id: data._id },
+                process.env.JWT_SECRET,
+                {
+                  expiresIn: `7d`,
+                }
+              );
+              const { _id, email, name, role } = data;
+              return res.json({
+                token,
+                user: { _id, email, name, role },
+              });
+            });
+          }
+        }
+      });
+    })
+    .catch((err) => {
+      res.json({
+        error: `facebook login failed. Try later`,
+      });
     });
 };
