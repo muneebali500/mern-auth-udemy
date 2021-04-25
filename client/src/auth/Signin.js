@@ -21,6 +21,15 @@ export default function Signin({ history }) {
     setValues({ ...values, [name]: event.target.value });
   };
 
+  const informParent = (response) => {
+    authenticate(response, () => {
+      // toast.success(`Hey ${response.data.user.name}, Welcome back!`);
+      isAuth() && isAuth().role === `admin`
+        ? history.push(`/admin`)
+        : history.push(`/private`);
+    });
+  };
+
   const clickSubmit = (event) => {
     event.preventDefault();
     setValues({ ...values, buttonText: "Submitting" });
@@ -30,7 +39,7 @@ export default function Signin({ history }) {
       data: { email, password },
     })
       .then((response) => {
-        console.log("SIGNIN SUCCESS", response);
+        // console.log("SIGNIN SUCCESS", response);
 
         // save the response (user, token) localStorage/cookie
         authenticate(response, () => {
@@ -90,7 +99,7 @@ export default function Signin({ history }) {
         <ToastContainer />
         {isAuth() ? <Redirect to="/" /> : null}
         <h1 className="p-5">Signin</h1>
-        <Google />
+        <Google informParent={informParent} />
         {signinForm()}
         <br />
         <Link

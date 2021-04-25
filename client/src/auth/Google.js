@@ -1,9 +1,9 @@
 import GoogleLogin from "react-google-login";
 import axios from "axios";
 
-export default function Google() {
+export default function Google({ informParent = (f) => f }) {
   const responseGoogle = (response) => {
-    console.log(response.tokenId);
+    // console.log(response.tokenId);
 
     axios({
       method: `POST`,
@@ -11,7 +11,8 @@ export default function Google() {
       data: { idToken: response.tokenId },
     })
       .then((response) => {
-        console.log(`Google signin success`, response);
+        // console.log(`Google signin success`, response);
+        informParent(response);
       })
       .catch((error) => {
         console.log(`Google signin error`, error.response);

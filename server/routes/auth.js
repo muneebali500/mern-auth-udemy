@@ -9,6 +9,7 @@ import {
   signin,
   forgotPassword,
   resetPassword,
+  googleLogin,
 } from "../controllers/auth.js";
 
 // import validators
@@ -37,5 +38,8 @@ router.put(
   runValidation,
   resetPassword
 );
+
+// google and facebook login
+router.post(`/google-login`, googleLogin);
 
 export default router;
