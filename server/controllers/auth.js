@@ -101,7 +101,7 @@ export const accountActivation = (req, res) => {
 
         user.save((err, user) => {
           if (err) {
-            console.log("SAVE USER IN ACCOUNT ACTIVATION ERROR", err);
+            // console.log("SAVE USER IN ACCOUNT ACTIVATION ERROR", err);
             return res.status(401).json({
               error: "Error saving user in database. Try signup again",
             });
@@ -208,7 +208,7 @@ export const forgotPassword = (req, res) => {
 
     return user.updateOne({ resetPasswordLink: token }, (err, success) => {
       if (err) {
-        console.log(`Reset Password Link Error`, err);
+        // console.log(`Reset Password Link Error`, err);
         return res.status(400).json({
           error: `Database connection error on user password forgot request`,
         });
