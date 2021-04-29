@@ -19,7 +19,7 @@ export default function ResetPassword({ match }) {
     if (token) {
       setValues({ ...values, name, token });
     }
-  }, []);
+  }, [match.params.token, values]);
 
   const { name, token, newPassword, buttonText } = values;
 

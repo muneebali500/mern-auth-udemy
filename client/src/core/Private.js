@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import Layout from "../core/Layout";
 import axios from "axios";
 import { isAuth, getCookie, signout, updateUser } from "../auth/helpers";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
-export default function Private({ history }) {
+const Private = ({ history }) => {
   const [values, setValues] = useState({
     role: "",
     name: "",
@@ -18,31 +17,30 @@ export default function Private({ history }) {
   const token = getCookie(`token`);
 
   useEffect(() => {
+    const loadProfile = () => {
+      return axios({
+        method: `GET`,
+        url: `${process.env.REACT_APP_API}/user/${isAuth()._id}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          // console.log(`Private Profile Update`, response);
+          const { role, name, email } = response.data;
+          setValues({ ...values, role, name, email });
+        })
+        .catch((error) => {
+          // console.log(`Private profile update error`, error.response.data.error);
+          if (error.response.status === 401) {
+            signout(() => {
+              history.push(`/`);
+            });
+          }
+        });
+    };
     loadProfile();
   }, []);
-
-  const loadProfile = () => {
-    axios({
-      method: `GET`,
-      url: `${process.env.REACT_APP_API}/user/${isAuth()._id}`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        // console.log(`Private Profile Update`, response);
-        const { role, name, email } = response.data;
-        setValues({ ...values, role, name, email });
-      })
-      .catch((error) => {
-        // console.log(`Private profile update error`, error.response.data.error);
-        if (error.response.status === 401) {
-          signout(() => {
-            history.push(`/`);
-          });
-        }
-      });
-  };
 
   const { role, name, email, password, buttonText } = values;
 
@@ -139,4 +137,6 @@ export default function Private({ history }) {
       </div>
     </Layout>
   );
-}
+};
+
+export default Private;
